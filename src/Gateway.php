@@ -3,8 +3,8 @@
 namespace Omnipay\Braintree;
 
 use Omnipay\Common\AbstractGateway;
-use Braintree_Gateway;
-use Braintree_Configuration;
+use Braintree\Gateway as BraintreeGateway;
+use Braintree\Configuration;
 use Omnipay\Common\Http\ClientInterface;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 /**
@@ -13,20 +13,20 @@ use Symfony\Component\HttpFoundation\Request as HttpRequest;
 class Gateway extends AbstractGateway
 {
     /**
-     * @var \Braintree_Gateway
+     * @var BraintreeGateway
      */
     protected $braintree;
 
     /**
      * Create a new gateway instance
      *
-     * @param ClientInterface $httpClient  A Guzzle client to make API calls with
-     * @param HttpRequest     $httpRequest A Symfony HTTP request object
-     * @param Braintree_Gateway $braintree The Braintree gateway
+     * @param ClientInterface  $httpClient  A Guzzle client to make API calls with
+     * @param HttpRequest      $httpRequest A Symfony HTTP request object
+     * @param BraintreeGateway $braintree The Braintree gateway
      */
-    public function __construct(ClientInterface $httpClient = null, HttpRequest $httpRequest = null, Braintree_Gateway $braintree = null)
+    public function __construct(ClientInterface $httpClient = null, HttpRequest $httpRequest = null, BraintreeGateway $braintree = null)
     {
-        $this->braintree = $braintree ?: Braintree_Configuration::gateway();
+        $this->braintree = $braintree ?: Configuration::gateway();
 
         parent::__construct($httpClient, $httpRequest);
     }
@@ -270,13 +270,13 @@ class Gateway extends AbstractGateway
     /**
      * @param array $parameters
      *
-     * @return \Braintree_WebhookNotification
+     * @return \Braintree\WebhookNotification
      *
-     * @throws \Braintree_Exception_InvalidSignature
+     * @throws \Braintree\Exception\InvalidSignature
      */
     public function parseNotification(array $parameters = array())
     {
-        return \Braintree_WebhookNotification::parse(
+        return \Braintree\WebhookNotification::parse(
             $parameters['bt_signature'],
             $parameters['bt_payload']
         );
